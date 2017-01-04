@@ -1,9 +1,28 @@
 ﻿<html>
 <head>
     <meta charset="utf-8">
-    <title>Test</title>
+    <title>Snake Game</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+    <canvas id="canvas" height="597" width="456"></canvas>
 
+    <div id="reMenu" style="z-index: 1;">
+        <h1 id="snake2">Snake</h1>
+        <p id="info2">You broke your head!</p>
+        <a href="javascript: void(0)" id="restart" onclick="reset()">Restart</a>        
+    </div>
+
+    <div id="menu" style="z-index: -1;">
+        <h1 id="snake">Snake</h1>
+        <p id="info">:|</p>
+        <a href="javascript: void(0)" id="start" onclick="init()" style="top: 30%;">Start</a>
+        <p id="loading" style="top: 100%;">Loading 100%</p>
+    </div>
+
+    <p id="score">Score: 0</p>
+
+    <script src="script.js"></script>
 </body>
 </html>
