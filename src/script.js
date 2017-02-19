@@ -1,4 +1,4 @@
-﻿//Preloading audio stuff
+//Preloading audio stuff
 var mainMusic = document.getElementById("main_music"),
         foodMusic = document.getElementById("food"),
         goMusic = document.getElementById("gameOver");
@@ -42,8 +42,8 @@ function init() {
     menu.style.zIndex = "-1";
 
     var snake,
-            size = 10,
-            speed = 25,
+            size = 25,
+            speed = 20,
             dir,
             game_loop,
             over = 0,
@@ -204,8 +204,8 @@ function init() {
         mainMusic.pause();
         goMusic.play();
 
-        var tweet = document.getElementById("tweet");
-        tweet.href = 'http://twitter.com/share?url=http://bit.ly/SnakeHTML5&text=I scored ' + score + ' points in the classic HTML5 Snake game&count=horiztonal&via=cssdeck';
+        //var tweet = document.getElementById("tweet");
+        //tweet.href = 'http://twitter.com/share?url=http://bit.ly/SnakeHTML5&text=I scored ' + score + ' points in the classic HTML5 Snake game&count=horiztonal&via=cssdeck';
 
         //Get the gameover text
         var goText = document.getElementById("info2");
@@ -234,3 +234,4 @@ function startMenu() {
 }
 
 startMenu();
+init();
