@@ -55,7 +55,7 @@ function init() {
     msgsSelf[1] = "Is your body tastier than the food?";
     msgsSelf[2] = "AArrgghhh!! I bit myself!!";
     msgsSelf[3] = "Do you have Autophagia?";
-	msgsSelf[4] = "Realy?";
+
 
     var msgsWall = [];
     msgsWall[0] = "You broke your head!";
@@ -63,6 +63,7 @@ function init() {
     msgsWall[2] = "There's no way to escape the game...";
     msgsWall[3] = "LOOK MA! NO HEAD..!!";
     msgsWall[4] = "Can't see the wall? Huh?";
+	msgsWall[5] = "Realy?";
 
     function paintCanvas() {
         ctx.fillStyle = "#1d655b";
