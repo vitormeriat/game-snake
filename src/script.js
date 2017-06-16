@@ -65,7 +65,7 @@ function init() {
     msgsWall[4] = "Can't see the wall? Huh?";
 
     function paintCanvas() {
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "#1d655b";
         ctx.fillRect(0, 0, w, h);
     }
 
