@@ -55,6 +55,7 @@ function init() {
     msgsSelf[1] = "Is your body tastier than the food?";
     msgsSelf[2] = "AArrgghhh!! I bit myself!!";
     msgsSelf[3] = "Do you have Autophagia?";
+	msgsSelf[4] = "Realy?";
 
     var msgsWall = [];
     msgsWall[0] = "You broke your head!";
