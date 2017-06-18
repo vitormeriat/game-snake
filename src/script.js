@@ -117,7 +117,6 @@ function init() {
         //Get the directions
         document.onkeydown = function (e) {
             var key = e.keyCode;
-            //console.log(key);
 
             if (key == 37 && dir != "right") setTimeout(function () { dir = "left"; }, 30);
             else if (key == 38 && dir != "down") setTimeout(function () { dir = "up"; }, 30);
@@ -125,7 +124,6 @@ function init() {
             else if (key == 40 && dir != "up") setTimeout(function () { dir = "down"; }, 30);
 
             if (key) e.preventDefault();
-
         }
 
         //Directions
@@ -201,7 +199,6 @@ function init() {
         speed = 30;
         if (typeof game_loop != "undefined") clearInterval(game_loop);
         game_loop = setInterval(draw, 1000 / speed);
-
 
         score = 0;
         scoreText.innerHTML = "Score: " + score;
