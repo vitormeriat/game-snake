@@ -74,9 +74,7 @@ function init() {
     }
 
     function updateCanvasEx() {
-        //ctx.fillStyle = "#1d655b";
         var randomItem = colorsHex[Math.floor(Math.random()*colorsHex.length)];
-        //ctx.fillStyle = randomItem;
         colorDef = randomItem;
         ctx.fillRect(0, 0, w, h);
     }
