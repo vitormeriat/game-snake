@@ -37,6 +37,9 @@ canvas.width = w;
 
 var reset, scoreText, menu, reMenu, score = 0;
 
+var colorsHex = ["#1d655b", "#ff3333", "#a64dff", "e6ac00"];
+var colorDef = "#1d655b";
+
 function init() {
     mainMusic.play();
     menu.style.zIndex = "-1";
@@ -66,7 +69,15 @@ function init() {
 	msgsWall[5] = "Realy?";
 
     function paintCanvas() {
-        ctx.fillStyle = "#1d655b";
+        ctx.fillStyle = colorDef;
+        ctx.fillRect(0, 0, w, h);
+    }
+
+    function updateCanvasEx() {
+        //ctx.fillStyle = "#1d655b";
+        var randomItem = colorsHex[Math.floor(Math.random()*colorsHex.length)];
+        //ctx.fillStyle = randomItem;
+        colorDef = randomItem;
         ctx.fillRect(0, 0, w, h);
     }
 
@@ -151,13 +162,14 @@ function init() {
             foodMusic.pause();
             foodMusic.currentTime = 0;
             foodMusic.play();
+            
+            updateCanvasEx();
 
             //Increase speed
             if (speed <= 45) speed++;
             clearInterval(game_loop);
             game_loop = setInterval(draw, 1000 / speed);
         }
-
         else {
             //Check collision between snake parts
             for (var j = 1; j < snake.length; j++) {
@@ -205,9 +217,6 @@ function init() {
         clearInterval(game_loop);
         mainMusic.pause();
         goMusic.play();
-
-        //var tweet = document.getElementById("tweet");
-        //tweet.href = 'http://twitter.com/share?url=http://bit.ly/SnakeHTML5&text=I scored ' + score + ' points in the classic HTML5 Snake game&count=horiztonal&via=cssdeck';
 
         //Get the gameover text
         var goText = document.getElementById("info2");
