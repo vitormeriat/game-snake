@@ -75,6 +75,8 @@ function init() {
 
     function updateCanvasEx() {
         var randomItem = colorsHex[Math.floor(Math.random()*colorsHex.length)];
+        if(randomItem == colorDef)
+            randomItem = colorsHex[Math.floor(Math.random()*colorsHex.length)];
         colorDef = randomItem;
         ctx.fillRect(0, 0, w, h);
     }
