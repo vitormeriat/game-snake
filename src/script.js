@@ -78,7 +78,7 @@ function init() {
         if(randomItem == colorDef)
             randomItem = colorsHex[Math.floor(Math.random()*colorsHex.length)];
         colorDef = randomItem;
-        ctx.fillRect(0, 0, w, h);
+        //ctx.fillRect(0, 0, w, h);
     }
 
     var Food = function () {
@@ -164,7 +164,7 @@ function init() {
             updateCanvasEx();
 
             //Increase speed
-            if (speed <= 45) speed++;
+            if (speed <= 10) speed++;
             clearInterval(game_loop);
             game_loop = setInterval(draw, 1000 / speed);
         }
@@ -198,7 +198,7 @@ function init() {
         reMenu.style.zIndex = "-1"
         dir = "right";
         over = 0;
-        speed = 30;
+        speed = 10;
         if (typeof game_loop != "undefined") clearInterval(game_loop);
         game_loop = setInterval(draw, 1000 / speed);
 
