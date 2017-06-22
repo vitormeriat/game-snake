@@ -6,19 +6,19 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-  <canvas id="canvas" height="597" width="456"></canvas>
+  <canvas id="canvas"></canvas>
 
       <div id="reMenu" style="z-index: 1;">
           <h1 id="snake2">Snake</h1>
-          <p id="info2">You broke your head!</p>
+          <p id="info2">Game Over!</p>
           <a href="javascript: void(0)" id="restart" onclick="reset()">Restart</a>
       </div>
 
-      <div id="menu" style="z-index: -1;">
+      <div id="menu">
           <h1 id="snake">Snake</h1>
           <p id="info">by <a target="_blank" rel="nofollow" href="http://twitter.com/vitormeriat">Vitor Meriat</a></p>
           <a href="javascript: void(0)" id="start" onclick="init()" style="top: 30%;">Start</a>
-          <p id="loading" style="top: 100%;">Loading 100%</p>
+          <p id="loading" style="top: 100%;">Loading...</p>
       </div>
 
       <p id="score">Score: 0</p>
