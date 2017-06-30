@@ -161,7 +161,7 @@ function init() {
             foodMusic.currentTime = 0;
             foodMusic.play();
             
-            updateCanvasEx();
+            //updateCanvasEx();
 
             //Increase speed
             if (speed <= 10) speed++;
