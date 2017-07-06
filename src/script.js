@@ -162,6 +162,11 @@ function init() {
             foodMusic.currentTime = 0;
             foodMusic.play();
             
+<<<<<<< HEAD
+=======
+            //updateCanvasEx();
+
+>>>>>>> 711e72634d5266757ecad289ffadae5abc3e0cff
             //Increase speed
             if (speed <= 10) speed++;
             clearInterval(game_loop);
