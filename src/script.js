@@ -152,6 +152,7 @@ function init() {
         //Food collision
         if (head_x == f.x && head_y == f.y) {
             coll = 1;
+			
             f = new Food();
             var tail = { x: head_x, y: head_y };
             snake.unshift(tail);
@@ -161,12 +162,13 @@ function init() {
             foodMusic.currentTime = 0;
             foodMusic.play();
             
-            updateCanvasEx();
-
             //Increase speed
             if (speed <= 10) speed++;
             clearInterval(game_loop);
             game_loop = setInterval(draw, 1000 / speed);
+			
+			//Upadate background
+			updateCanvasEx();
         }
         else {
             //Check collision between snake parts
