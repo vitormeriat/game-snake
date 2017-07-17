@@ -1,252 +1,334 @@
-//Preloading audio stuff
-var mainMusic = document.getElementById("main_music"),
-        foodMusic = document.getElementById("food"),
-        goMusic = document.getElementById("gameOver");
+(function(){
+    /////////////////////////////////////////////////////////////
 
-var files = [mainMusic, foodMusic, goMusic];
-var counter = 0;
+    // Canvas & Context
+    var canvas;
+    var ctx;
 
-var start = document.getElementById("start"),
-        loading = document.getElementById("loading");
+    // Snake
+    var snake;
+    var snake_dir;
+	 var snake_next_dir;
+    var snake_speed;
 
-for (var i = 0; i < files.length; i++) {
-    var file = files[i];
-    file.addEventListener("loadeddata", function () {
-        counter++;
-        var percent = Math.floor((counter / files.length) * 100);
-        loading.innerHTML = "Loading " + percent + "%";
-        if (percent == 100) showButton();
-    });
-}
+    // Food
+    var food = {x: 0, y: 0};
 
-function showButton() {
-    start.style.top = "30%";
-    loading.style.top = "100%";
-}
+    // Score
+    var score;
 
-//Initializing Canvas
-var canvas = document.getElementById("canvas"),
-        ctx = canvas.getContext("2d"),
+    // Wall
+    var wall;
 
-        //Full width and height
-        w = window.innerWidth,
-        h = window.innerHeight;
+    // HTML Elements
+    var screen_snake;
+    var screen_menu;
+    var screen_setting;
+    var screen_gameover;
+    var button_newgame_menu;
+    var button_newgame_setting;
+    var button_newgame_gameover;
+    var button_setting_menu;
+    var button_setting_gameover;
+    var ele_score;
+    var speed_setting;
+    var wall_setting;
 
-canvas.height = h;
-canvas.width = w;
+    /////////////////////////////////////////////////////////////
 
-var reset, scoreText, menu, reMenu, score = 0;
-
-var colorsHex = ["#1d655b", "#ff3333", "#a64dff", "e6ac00"];
-var colorDef = "#1d655b";
-
-function init() {
-    mainMusic.play();
-    menu.style.zIndex = "-1";
-
-    var snake,
-            size = 25,
-            speed = 20,
-            dir,
-            game_loop,
-            over = 0,
-            hitType;
-
-    //Custom funny gameover messages
-    var msgsSelf = [];
-    msgsSelf[0] = "There's plenty of food. Don't eat yourself!";
-    msgsSelf[1] = "Is your body tastier than the food?";
-    msgsSelf[2] = "AArrgghhh!! I bit myself!!";
-    msgsSelf[3] = "Do you have Autophagia?";
-
-
-    var msgsWall = [];
-    msgsWall[0] = "You broke your head!";
-    msgsWall[1] = "The wall is stronger than it seems!";
-    msgsWall[2] = "There's no way to escape the game...";
-    msgsWall[3] = "LOOK MA! NO HEAD..!!";
-    msgsWall[4] = "Can't see the wall? Huh?";
-	msgsWall[5] = "Realy?";
-
-    function paintCanvas() {
-        ctx.fillStyle = colorDef;
-        ctx.fillRect(0, 0, w, h);
+    var activeDot = function(x, y){
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(x * 10, y * 10, 10, 10);
     }
 
-    function updateCanvasEx() {
-        var randomItem = colorsHex[Math.floor(Math.random()*colorsHex.length)];
-        if(randomItem == colorDef)
-            randomItem = colorsHex[Math.floor(Math.random()*colorsHex.length)];
-        colorDef = randomItem;
-        //ctx.fillRect(0, 0, w, h);
+
+    /////////////////////////////////////////////////////////////
+
+    var changeDir = function(key){
+
+        if(key == 38 && snake_dir != 2){
+            snake_next_dir = 0;
+        }else{
+
+        if (key == 39 && snake_dir != 3){
+            snake_next_dir = 1;
+        }else{
+
+        if (key == 40 && snake_dir != 0){
+            snake_next_dir = 2;
+        }else{
+
+        if(key == 37 && snake_dir != 1){
+            snake_next_dir = 3;
+        } } } }
+
     }
 
-    var Food = function () {
-        this.x = Math.round(Math.random() * (w - size) / size);
-        this.y = Math.round(Math.random() * (h - size) / size);
+    /////////////////////////////////////////////////////////////
 
-        this.draw = function () {
-            ctx.fillStyle = "white";
-            ctx.fillRect(this.x * size, this.y * size, size, size);
-        }
-    }
-
-    var f = new Food();
-
-    //Initialize the snake
-    function initSnake() {
-        var length = 10;
-        snake = [];
-        for (var i = length - 1; i >= 0; i--) {
-            snake.push({ x: i, y: 0 });
-        }
-    }
-
-    function paintSnake() {
-        for (var i = 0; i < snake.length; i++) {
-            var s = snake[i];
-
-            ctx.fillStyle = "white";
-            ctx.fillRect(s.x * size, s.y * size, size, size);
-        }
-    }
-
-    function updateSnake() {
-        //Update the position of the snake
-        var head_x = snake[0].x;
-        var head_y = snake[0].y;
-
-        //Get the directions
-        document.onkeydown = function (e) {
-            var key = e.keyCode;
-
-            if (key == 37 && dir != "right") setTimeout(function () { dir = "left"; }, 30);
-            else if (key == 38 && dir != "down") setTimeout(function () { dir = "up"; }, 30);
-            else if (key == 39 && dir != "left") setTimeout(function () { dir = "right"; }, 30);
-            else if (key == 40 && dir != "up") setTimeout(function () { dir = "down"; }, 30);
-
-            if (key) e.preventDefault();
-        }
-
-        //Directions
-        if (dir == "right") head_x++;
-        else if (dir == "left") head_x--;
-        else if (dir == "up") head_y--;
-        else if (dir == "down") head_y++;
-
-        //Move snake
-        var tail = snake.pop();
-        tail.x = head_x;
-        tail.y = head_y;
-        snake.unshift(tail);
-
-        //Wall Collision
-        if (head_x >= w / size || head_x <= -1 || head_y >= h / size || head_y <= -1) {
-            if (over == 0) {
-                hitType = "wall";
-                gameover();
+    var addFood = function(){
+        food.x = Math.floor(Math.random() * ((canvas.width / 10) - 1));
+        food.y = Math.floor(Math.random() * ((canvas.height / 10) - 1));
+        for(var i = 0; i < snake.length; i++){
+            if(checkBlock(food.x, food.y, snake[i].x, snake[i].y)){
+                addFood();
             }
-            over++
         }
+    }
 
-        //Food collision
-        if (head_x == f.x && head_y == f.y) {
-            coll = 1;
-			
-            f = new Food();
-            var tail = { x: head_x, y: head_y };
-            snake.unshift(tail);
-            score += 10;
-            scoreText.innerHTML = "Score: " + score;
-            foodMusic.pause();
-            foodMusic.currentTime = 0;
-            foodMusic.play();
-            
-<<<<<<< HEAD
-=======
-            //updateCanvasEx();
+    /////////////////////////////////////////////////////////////
 
->>>>>>> 711e72634d5266757ecad289ffadae5abc3e0cff
-            //Increase speed
-            if (speed <= 10) speed++;
-            clearInterval(game_loop);
-            game_loop = setInterval(draw, 1000 / speed);
-			
-			//Upadate background
-			updateCanvasEx();
-        }
-        else {
-            //Check collision between snake parts
-            for (var j = 1; j < snake.length; j++) {
-                var s = snake[j];
-                if (head_x == s.x && head_y == s.y) {
-                    if (over == 0) {
-                        hitType = "self";
-                        gameover();
+    var checkBlock = function(x, y, _x, _y){
+        return (x == _x && y == _y) ? true : false;
+    }
+
+    /////////////////////////////////////////////////////////////
+
+    var altScore = function(score_val){
+        ele_score.innerHTML = String(score_val);
+    }
+
+    /////////////////////////////////////////////////////////////
+
+    var mainLoop = function(){
+
+            var _x = snake[0].x;
+            var _y = snake[0].y;
+			snake_dir = snake_next_dir;
+
+            // 0 - Up, 1 - Right, 2 - Down, 3 - Left
+            switch(snake_dir){
+                case 0: _y--; break;
+                case 1: _x++; break;
+                case 2: _y++; break;
+                case 3: _x--; break;
+            }
+
+            snake.pop();
+            snake.unshift({x: _x, y: _y});
+
+
+        // --------------------
+
+        // Wall
+
+            if(wall == 1){
+            // On
+                if (snake[0].x < 0 || snake[0].x == canvas.width / 10 || snake[0].y < 0 || snake[0].y == canvas.height / 10){
+                    showScreen(3);
+                    return;
+                }
+            }else{
+            // Off
+                for(var i = 0, x = snake.length; i < x; i++){
+                    if(snake[i].x < 0){
+                        snake[i].x = snake[i].x + (canvas.width / 10);
                     }
-                    over++;
+                    if(snake[i].x == canvas.width / 10){
+                        snake[i].x = snake[i].x - (canvas.width / 10);
+                    }
+                    if(snake[i].y < 0){
+                        snake[i].y = snake[i].y + (canvas.height / 10);
+                    }
+                    if(snake[i].y == canvas.height / 10){
+                        snake[i].y = snake[i].y - (canvas.height / 10);
+                    }
+                }
+            }
+
+        // --------------------
+
+        // Autophagy death
+            for(var i = 1; i < snake.length; i++){
+                if (snake[0].x == snake[i].x && snake[0].y == snake[i].y){
+                    showScreen(3);
+                    return;
+                }
+            }
+
+        // --------------------
+
+      // Eat Food
+            if(checkBlock(snake[0].x, snake[0].y, food.x, food.y)){
+                snake[snake.length] = {x: snake[0].x, y: snake[0].y};
+                score += 1;
+                altScore(score);
+                addFood();
+                activeDot(food.x, food.y);
+            }
+
+        // --------------------
+
+            ctx.beginPath();
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // --------------------
+
+            for(var i = 0; i < snake.length; i++){
+                activeDot(snake[i].x, snake[i].y);
+            }
+
+        // --------------------
+
+            activeDot(food.x, food.y);
+
+		// Debug
+		//document.getElementById("debug").innerHTML = snake_dir + " " + snake_next_dir + " " + snake[0].x + " " + snake[0].y;
+
+            setTimeout(mainLoop, snake_speed);
+    }
+
+    /////////////////////////////////////////////////////////////
+
+    var newGame = function(){
+
+        showScreen(0);
+        screen_snake.focus();
+
+        snake = [];
+        for(var i = 4; i >= 0; i--){
+            snake.push({x: i, y: 15});
+        }
+
+        snake_next_dir = 1;
+
+        score = 0;
+        altScore(score);
+
+        addFood();
+
+        canvas.onkeydown = function(evt) {
+            evt = evt || window.event;
+            changeDir(evt.keyCode);
+        }
+        mainLoop();
+
+    }
+
+    /////////////////////////////////////////////////////////////
+
+    // Change the snake speed...
+    // 150 = slow
+    // 100 = normal
+    // 50 = fast
+    var setSnakeSpeed = function(speed_value){
+        snake_speed = speed_value;
+    }
+
+    /////////////////////////////////////////////////////////////
+    var setWall = function(wall_value){
+        wall = wall_value;
+        if(wall == 0){screen_snake.style.borderColor = "#606060";}
+        if(wall == 1){screen_snake.style.borderColor = "#FFFFFF";}
+    }
+
+    /////////////////////////////////////////////////////////////
+
+    // 0 for the game
+    // 1 for the main menu
+    // 2 for the settings screen
+    // 3 for the game over screen
+    var showScreen = function(screen_opt){
+        switch(screen_opt){
+
+            case 0:  screen_snake.style.display = "block";
+                     screen_menu.style.display = "none";
+                     screen_setting.style.display = "none";
+                     screen_gameover.style.display = "none";
+                     break;
+
+            case 1:  screen_snake.style.display = "none";
+                     screen_menu.style.display = "block";
+                     screen_setting.style.display = "none";
+                     screen_gameover.style.display = "none";
+                     break;
+
+            case 2:  screen_snake.style.display = "none";
+                     screen_menu.style.display = "none";
+                     screen_setting.style.display = "block";
+                     screen_gameover.style.display = "none";
+                     break;
+
+            case 3: screen_snake.style.display = "none";
+                    screen_menu.style.display = "none";
+                    screen_setting.style.display = "none";
+                    screen_gameover.style.display = "block";
+                    break;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////
+
+    window.onload = function(){
+
+        canvas = document.getElementById("snake");
+        ctx = canvas.getContext("2d");
+
+            // Screens
+            screen_snake = document.getElementById("snake");
+            screen_menu = document.getElementById("menu");
+            screen_gameover = document.getElementById("gameover");
+            screen_setting = document.getElementById("setting");
+
+            // Buttons
+            button_newgame_menu = document.getElementById("newgame_menu");
+            button_newgame_setting = document.getElementById("newgame_setting");
+            button_newgame_gameover = document.getElementById("newgame_gameover");
+            button_setting_menu = document.getElementById("setting_menu");
+            button_setting_gameover = document.getElementById("setting_gameover");
+
+            // etc
+            ele_score = document.getElementById("score_value");
+            speed_setting = document.getElementsByName("speed");
+            wall_setting = document.getElementsByName("wall");
+
+        // --------------------
+
+        button_newgame_menu.onclick = function(){newGame();};
+        button_newgame_gameover.onclick = function(){newGame();};
+        button_newgame_setting.onclick = function(){newGame();};
+        button_setting_menu.onclick = function(){showScreen(2);};
+        button_setting_gameover.onclick = function(){showScreen(2)};
+
+        setSnakeSpeed(150);
+        setWall(1);
+
+        showScreen("menu");
+
+        // --------------------
+        // Settings
+
+            // speed
+            for(var i = 0; i < speed_setting.length; i++){
+                speed_setting[i].addEventListener("click", function(){
+                    for(var i = 0; i < speed_setting.length; i++){
+                        if(speed_setting[i].checked){
+                            setSnakeSpeed(speed_setting[i].value);
+                        }
+                    }
+                });
+            }
+
+            // wall
+            for(var i = 0; i < wall_setting.length; i++){
+                wall_setting[i].addEventListener("click", function(){
+                    for(var i = 0; i < wall_setting.length; i++){
+                        if(wall_setting[i].checked){
+                            setWall(wall_setting[i].value);
+                        }
+                    }
+                });
+            }
+
+        document.onkeydown = function(evt){
+            if(screen_gameover.style.display == "block"){
+                evt = evt || window.event;
+                if(evt.keyCode == 32){
+                    newGame();
                 }
             }
         }
     }
 
-    function draw() {
-        paintCanvas();
-        paintSnake();
-        updateSnake();
-
-        //Draw food
-        f.draw();
-    }
-
-    reset = function () {
-        initSnake();
-        f = new Food();
-        reMenu.style.zIndex = "-1"
-        dir = "right";
-        over = 0;
-        speed = 10;
-        if (typeof game_loop != "undefined") clearInterval(game_loop);
-        game_loop = setInterval(draw, 1000 / speed);
-
-        score = 0;
-        scoreText.innerHTML = "Score: " + score;
-        mainMusic.currentTime = 0;
-        mainMusic.play();
-
-        return;
-    }
-
-    function gameover() {
-        clearInterval(game_loop);
-        mainMusic.pause();
-        goMusic.play();
-
-        //Get the gameover text
-        var goText = document.getElementById("info2");
-
-        //Show the messages
-        if (hitType == "wall") {
-            goText.innerHTML = msgsWall[Math.floor(Math.random() * msgsWall.length)];
-        }
-        else if (hitType == "self") {
-            goText.innerHTML = msgsSelf[Math.floor(Math.random() * msgsSelf.length)];
-        }
-
-        reMenu.style.zIndex = "1";
-    }
-
-    reset();
-}
-
-//Menus
-function startMenu() {
-    menu = document.getElementById("menu");
-    reMenu = document.getElementById("reMenu");
-
-    scoreText = document.getElementById("score");
-    reMenu.style.zIndex = "-1"
-}
-
-startMenu();
-//init();
+})();
