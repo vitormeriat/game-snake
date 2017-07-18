@@ -263,6 +263,8 @@
     window.onload = function(){
 
         canvas = document.getElementById("snake");
+        canvas.width = document.body.clientWidth-100; //document.width is obsolete
+        canvas.height = document.body.clientHeight-100; //document.height is obsolete
         ctx = canvas.getContext("2d");
 
             // Screens
