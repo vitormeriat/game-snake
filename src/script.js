@@ -301,27 +301,27 @@
         // --------------------
         // Settings
 
-            // speed
-            for(var i = 0; i < speed_setting.length; i++){
-                speed_setting[i].addEventListener("click", function(){
-                    for(var i = 0; i < speed_setting.length; i++){
-                        if(speed_setting[i].checked){
-                            setSnakeSpeed(speed_setting[i].value);
-                        }
+        // speed
+        for(var i = 0; i < speed_setting.length; i++){
+            speed_setting[i].addEventListener("click", function(){
+                for(var i = 0; i < speed_setting.length; i++){
+                    if(speed_setting[i].checked){
+                        setSnakeSpeed(speed_setting[i].value);
                     }
-                });
-            }
+                }
+            });
+        }
 
-            // wall
-            for(var i = 0; i < wall_setting.length; i++){
-                wall_setting[i].addEventListener("click", function(){
-                    for(var i = 0; i < wall_setting.length; i++){
-                        if(wall_setting[i].checked){
-                            setWall(wall_setting[i].value);
-                        }
+        // wall
+        for(var i = 0; i < wall_setting.length; i++){
+            wall_setting[i].addEventListener("click", function(){
+                for(var i = 0; i < wall_setting.length; i++){
+                    if(wall_setting[i].checked){
+                        setWall(wall_setting[i].value);
                     }
-                });
-            }
+                }
+            });
+        }
 
         document.onkeydown = function(evt){
             if(screen_gameover.style.display == "block"){
