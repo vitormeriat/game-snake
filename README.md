@@ -1,2 +1,8 @@
-# game-snake
-Classic Snake Game with HTML5 Canvas
+# Game Snake
+
+Classic Snake Game with HTML5 Canvas.
+
+## Features
+* Menu
+* Level
+* Options
